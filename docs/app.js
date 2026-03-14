@@ -9,6 +9,12 @@
     let markerLayer;
     let allRestaurants = [];
     let db;
+    let currentUser = null;
+
+    const ALLOWED_EMAILS = [
+        "payne.brad@gmail.com",
+        "anahitamakouie@gmail.com"
+    ];
 
     // Firebase config
     const firebaseConfig = {
@@ -464,6 +470,46 @@
         document.getElementById("stat-cuisines").textContent = Object.keys(cuisines).length;
     }
 
+    // ── Auth ──
+    function initAuth() {
+        var auth = firebase.auth();
+        var provider = new firebase.auth.GoogleAuthProvider();
+
+        var signInBtn = document.getElementById("nav-sign-in");
+        var signOutBtn = document.getElementById("nav-sign-out");
+        var addItem = document.getElementById("nav-auth-item");
+
+        signInBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            auth.signInWithPopup(provider).catch(function (err) {
+                console.error("Sign-in failed:", err);
+            });
+        });
+
+        signOutBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            auth.signOut();
+        });
+
+        auth.onAuthStateChanged(function (user) {
+            if (user && ALLOWED_EMAILS.indexOf(user.email) !== -1) {
+                currentUser = user;
+                signInBtn.style.display = "none";
+                signOutBtn.style.display = "";
+                addItem.style.display = "";
+                // Show edit icons
+                document.body.classList.add("auth-ready");
+            } else {
+                if (user) auth.signOut(); // signed in but not allowed
+                currentUser = null;
+                signInBtn.style.display = "";
+                signOutBtn.style.display = "none";
+                addItem.style.display = "none";
+                document.body.classList.remove("auth-ready");
+            }
+        });
+    }
+
     // ── Nav scroll effect + hamburger toggle ──
     function initNav() {
         var nav = document.getElementById("nav");
@@ -529,6 +575,7 @@
         initMap();
         initNav();
         initModal();
+        initAuth();
 
         allRestaurants = await loadData();
 

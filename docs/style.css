@@ -561,7 +561,7 @@ section { padding: 100px 0; }
     z-index: 2;
     box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
-.rest-card:hover .card-edit-icon { opacity: 1; }
+.auth-ready .rest-card:hover .card-edit-icon { opacity: 1; }
 
 /* ── Edit Modal ── */
 .modal-overlay {
