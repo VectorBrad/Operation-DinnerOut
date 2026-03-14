@@ -481,9 +481,7 @@
 
         signInBtn.addEventListener("click", function (e) {
             e.preventDefault();
-            auth.signInWithPopup(provider).catch(function (err) {
-                console.error("Sign-in failed:", err);
-            });
+            auth.signInWithRedirect(provider);
         });
 
         signOutBtn.addEventListener("click", function (e) {
