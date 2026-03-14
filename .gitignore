@@ -1,5 +1,7 @@
 # Secrets
 .env
+*-firebase-adminsdk-*.json
+To Try_copy.xlsx
 
 # Python
 __pycache__/

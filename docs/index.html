@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinner Out — Ana & Brad</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
+
+    <!-- Fonts (Playfair Display + Lato — matching Portugal trip) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="nav">
+        <span class="nav-brand">Dinner Out</span>
+        <ul class="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#map-section">Map</a></li>
+            <li><a href="#wishlist-section">Wishlist</a></li>
+            <li><a href="#tried-section">Tried</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-eyebrow">Ana & Brad</div>
+            <h1 class="hero-title">Dinner Out</h1>
+            <p class="hero-subtitle">Our restaurant wishlist & date night guide</p>
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <span class="label">Restaurants</span>
+                    <span class="value" id="stat-total">—</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="label">Tried</span>
+                    <span class="value" id="stat-tried">—</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="label">To Explore</span>
+                    <span class="value" id="stat-want">—</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="label">Cuisines</span>
+                    <span class="value" id="stat-cuisines">—</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            Scroll
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section id="map-section">
+        <div class="container">
+            <span class="section-label">Explore</span>
+            <h2 class="section-title">The Map</h2>
+            <div class="divider"></div>
+            <p class="section-intro">Every spot we've tried or want to try, plotted across the city. Green for visited, gold for the wishlist.</p>
+
+            <div class="map-wrapper">
+                <div id="map"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wishlist Section -->
+    <section id="wishlist-section" class="section-alt">
+        <div class="container">
+            <span class="section-label">Next Up</span>
+            <h2 class="section-title">The Wishlist</h2>
+            <div class="divider"></div>
+
+            <!-- Filters -->
+            <div class="filter-bar">
+                <div class="filter-item">
+                    <label for="filter-status">Status</label>
+                    <select id="filter-status">
+                        <option value="all">All</option>
+                        <option value="Want to try">Want to Try</option>
+                        <option value="Tried">Tried</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label for="filter-cuisine">Cuisine</label>
+                    <select id="filter-cuisine">
+                        <option value="all">All</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label for="filter-vibe">Vibe</label>
+                    <select id="filter-vibe">
+                        <option value="all">All</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label for="filter-price">Price</label>
+                    <select id="filter-price">
+                        <option value="all">All</option>
+                    </select>
+                </div>
+            </div>
+
+            <p class="section-intro">Spots on our radar — waiting for the right night.</p>
+            <div class="card-grid" id="wishlist-grid"></div>
+        </div>
+    </section>
+
+    <!-- Tried Section -->
+    <section id="tried-section">
+        <div class="container">
+            <span class="section-label">Been There</span>
+            <h2 class="section-title">Places We've Tried</h2>
+            <div class="divider"></div>
+            <p class="section-intro">Our favourites so far — rated and reviewed.</p>
+            <div class="card-grid" id="tried-grid"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <span class="footer-brand">Dinner Out</span>
+        Ana & Brad's restaurant guide — built with love and good taste.
+    </footer>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="edit-modal" aria-hidden="true">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Restaurant</h3>
+                <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+            </div>
+            <form class="modal-form" id="edit-form">
+                <input type="hidden" id="edit-doc-id">
+                <div class="modal-field-group">
+                    <div class="modal-field">
+                        <label for="edit-name">Name</label>
+                        <input type="text" id="edit-name" name="name">
+                    </div>
+                    <div class="modal-field">
+                        <label for="edit-cuisine">Cuisine</label>
+                        <input type="text" id="edit-cuisine" name="cuisine">
+                    </div>
+                </div>
+                <div class="modal-field-group">
+                    <div class="modal-field">
+                        <label for="edit-type">Type</label>
+                        <input type="text" id="edit-type" name="type">
+                    </div>
+                    <div class="modal-field">
+                        <label for="edit-price">Price</label>
+                        <input type="text" id="edit-price" name="price" placeholder="$, $$, $$$">
+                    </div>
+                </div>
+                <div class="modal-field-group">
+                    <div class="modal-field">
+                        <label for="edit-vibe">Vibe</label>
+                        <input type="text" id="edit-vibe" name="vibe">
+                    </div>
+                    <div class="modal-field">
+                        <label for="edit-location">Location</label>
+                        <input type="text" id="edit-location" name="location">
+                    </div>
+                </div>
+                <div class="modal-field">
+                    <label for="edit-url">Website URL</label>
+                    <input type="url" id="edit-url" name="url" placeholder="https://...">
+                </div>
+                <div class="modal-field-group">
+                    <div class="modal-field">
+                        <label for="edit-her-rating">Her Rating</label>
+                        <input type="number" id="edit-her-rating" name="her_rating" min="1" max="10" step="0.5">
+                    </div>
+                    <div class="modal-field">
+                        <label for="edit-his-rating">His Rating</label>
+                        <input type="number" id="edit-his-rating" name="his_rating" min="1" max="10" step="0.5">
+                    </div>
+                </div>
+                <div class="modal-field">
+                    <label for="edit-status">Status</label>
+                    <select id="edit-status" name="status">
+                        <option value="Want to try">Want to Try</option>
+                        <option value="Tried">Tried</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label for="edit-notes">Notes</label>
+                    <textarea id="edit-notes" name="notes" rows="3"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn modal-btn-cancel" id="modal-cancel">Cancel</button>
+                    <button type="submit" class="modal-btn modal-btn-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <!-- Firebase SDK (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="app.js"></script>
+</body>
+</html>

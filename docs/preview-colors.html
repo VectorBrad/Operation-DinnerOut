@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colour Preview — Phthalo Blue Options</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Lato', sans-serif; font-weight: 300; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+        .comparison { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+        .panel { padding: 48px 40px; }
+        .panel-a { background: #0B2545; color: #e8e0d5; }
+        .panel-b { background: #071E3D; color: #e8e0d5; }
+
+        .panel-label {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.25em;
+            text-transform: uppercase; color: #d4a96a; margin-bottom: 8px;
+        }
+        .panel-title {
+            font-size: 2rem; color: #fff; margin-bottom: 6px;
+        }
+        .panel-hex {
+            font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 32px;
+            font-family: monospace;
+        }
+
+        /* Nav mock */
+        .mock-nav {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 14px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-radius: 4px; margin-bottom: 32px;
+        }
+        .mock-nav-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem; color: #d4a96a; letter-spacing: 0.08em;
+        }
+        .mock-nav-links { display: flex; gap: 20px; list-style: none; }
+        .mock-nav-links a {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+            text-transform: uppercase; color: rgba(255,255,255,0.6);
+            text-decoration: none;
+        }
+
+        /* Section label */
+        .section-label {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.25em;
+            text-transform: uppercase; color: #d4a96a; margin-bottom: 10px;
+        }
+        .section-title {
+            font-size: 1.5rem; color: #fff; margin-bottom: 10px;
+        }
+        .divider {
+            width: 50px; height: 2px; background: #d4a96a; margin-bottom: 20px;
+        }
+        .section-intro {
+            font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        /* Filter mock */
+        .mock-filters {
+            display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap;
+        }
+        .mock-filter {
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .mock-filter label {
+            font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em;
+            text-transform: uppercase; color: #d4a96a;
+        }
+        .mock-filter select {
+            padding: 6px 12px; border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 2px; font-family: 'Lato', sans-serif; font-size: 0.8rem;
+            font-weight: 300; color: #e8e0d5; cursor: pointer; min-width: 120px;
+        }
+        .panel-a .mock-filter select { background: rgba(255,255,255,0.07); }
+        .panel-b .mock-filter select { background: rgba(255,255,255,0.07); }
+
+        /* Card mock */
+        .mock-cards { display: flex; flex-direction: column; gap: 16px; }
+        .mock-card {
+            border-radius: 4px; overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .panel-a .mock-card { background: rgba(255,255,255,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .panel-b .mock-card { background: rgba(255,255,255,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .mock-card:hover { transform: translateY(-3px); }
+
+        .mock-card-img {
+            height: 120px; background-size: cover; background-position: center;
+            position: relative;
+        }
+        .mock-card-badge {
+            position: absolute; top: 8px; left: 8px;
+            font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em;
+            text-transform: uppercase; padding: 3px 10px; border-radius: 2px;
+            background: rgba(139,111,71,0.85); color: #fff;
+        }
+        .mock-card-badge.tried { background: rgba(46,125,50,0.85); }
+
+        .mock-card-body { padding: 18px 20px 16px; }
+        .mock-card-name {
+            font-family: 'Playfair Display', serif; font-size: 1.1rem;
+            color: #fff; margin-bottom: 4px;
+        }
+        .mock-card-cuisine {
+            font-size: 0.7rem; color: #d4a96a; font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px;
+        }
+        .mock-card-tags { display: flex; gap: 6px; margin-bottom: 10px; }
+        .mock-card-tag {
+            font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+            text-transform: uppercase; padding: 2px 8px; border-radius: 20px;
+        }
+        .panel-a .mock-card-tag { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+        .panel-b .mock-card-tag { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+
+        .mock-card-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.75rem;
+        }
+        .mock-card-location { color: rgba(255,255,255,0.35); }
+        .mock-card-link {
+            font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+            color: #d4a96a; text-decoration: none; font-size: 0.7rem;
+        }
+
+        /* Map mock */
+        .mock-map {
+            height: 140px; border-radius: 4px; margin-bottom: 32px;
+            background: #1a1a2e; position: relative; overflow: hidden;
+        }
+        .panel-a .mock-map { background: #0a1929; }
+        .panel-b .mock-map { background: #051428; }
+        .mock-map-label {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+            font-size: 0.8rem; color: rgba(255,255,255,0.25);
+            letter-spacing: 0.15em; text-transform: uppercase;
+        }
+
+        /* Footer mock */
+        .mock-footer {
+            margin-top: 32px; padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+        }
+        .mock-footer-brand {
+            font-family: 'Playfair Display', serif; font-size: 1.1rem;
+            color: #d4a96a; display: block; margin-bottom: 6px;
+        }
+        .mock-footer-text {
+            font-size: 0.75rem; color: rgba(255,255,255,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .comparison { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="comparison">
+        <!-- Option A: #0B2545 -->
+        <div class="panel panel-a">
+            <div class="panel-label">Option A</div>
+            <h2 class="panel-title">Deep Phthalo</h2>
+            <div class="panel-hex">#0B2545</div>
+
+            <div class="mock-nav">
+                <span class="mock-nav-brand">Dinner Out</span>
+                <ul class="mock-nav-links">
+                    <li><a href="#">Map</a></li>
+                    <li><a href="#">Wishlist</a></li>
+                    <li><a href="#">Tried</a></li>
+                </ul>
+            </div>
+
+            <span class="section-label">Next Up</span>
+            <h3 class="section-title">The Wishlist</h3>
+            <div class="divider"></div>
+
+            <div class="mock-filters">
+                <div class="mock-filter">
+                    <label>Cuisine</label>
+                    <select><option>All</option></select>
+                </div>
+                <div class="mock-filter">
+                    <label>Vibe</label>
+                    <select><option>All</option></select>
+                </div>
+            </div>
+
+            <p class="section-intro">Spots on our radar — waiting for the right night.</p>
+
+            <div class="mock-cards">
+                <div class="mock-card">
+                    <div class="mock-card-img" style="background-image:url('https://images.unsplash.com/photo-1498579150354-977475b7ea0b?w=400&h=200&fit=crop')">
+                        <span class="mock-card-badge">Want to Try</span>
+                    </div>
+                    <div class="mock-card-body">
+                        <div class="mock-card-name">La Palma</div>
+                        <div class="mock-card-cuisine">Italian</div>
+                        <div class="mock-card-tags">
+                            <span class="mock-card-tag">$$$</span>
+                            <span class="mock-card-tag">Date Night</span>
+                        </div>
+                        <div class="mock-card-footer">
+                            <span class="mock-card-location">Dundas</span>
+                            <a class="mock-card-link" href="#">lapalma.ca &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mock-card">
+                    <div class="mock-card-img" style="background-image:url('https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=200&fit=crop')">
+                        <span class="mock-card-badge tried">Tried</span>
+                    </div>
+                    <div class="mock-card-body">
+                        <div class="mock-card-name">Jacobs & Co</div>
+                        <div class="mock-card-cuisine">Steak</div>
+                        <div class="mock-card-tags">
+                            <span class="mock-card-tag">$$$$$</span>
+                            <span class="mock-card-tag">Celebration</span>
+                        </div>
+                        <div class="mock-card-footer">
+                            <span class="mock-card-location">Front Street</span>
+                            <a class="mock-card-link" href="#">jacobssteakhouse.com &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mock-footer">
+                <span class="mock-footer-brand">Dinner Out</span>
+                <span class="mock-footer-text">Ana & Brad's restaurant guide</span>
+            </div>
+        </div>
+
+        <!-- Option B: #1B3A5C -->
+        <div class="panel panel-b">
+            <div class="panel-label">Option F</div>
+            <h2 class="panel-title">Deep Midnight Navy</h2>
+            <div class="panel-hex">#071E3D</div>
+
+            <div class="mock-nav">
+                <span class="mock-nav-brand">Dinner Out</span>
+                <ul class="mock-nav-links">
+                    <li><a href="#">Map</a></li>
+                    <li><a href="#">Wishlist</a></li>
+                    <li><a href="#">Tried</a></li>
+                </ul>
+            </div>
+
+            <span class="section-label">Next Up</span>
+            <h3 class="section-title">The Wishlist</h3>
+            <div class="divider"></div>
+
+            <div class="mock-filters">
+                <div class="mock-filter">
+                    <label>Cuisine</label>
+                    <select><option>All</option></select>
+                </div>
+                <div class="mock-filter">
+                    <label>Vibe</label>
+                    <select><option>All</option></select>
+                </div>
+            </div>
+
+            <p class="section-intro">Spots on our radar — waiting for the right night.</p>
+
+            <div class="mock-cards">
+                <div class="mock-card">
+                    <div class="mock-card-img" style="background-image:url('https://images.unsplash.com/photo-1498579150354-977475b7ea0b?w=400&h=200&fit=crop')">
+                        <span class="mock-card-badge">Want to Try</span>
+                    </div>
+                    <div class="mock-card-body">
+                        <div class="mock-card-name">La Palma</div>
+                        <div class="mock-card-cuisine">Italian</div>
+                        <div class="mock-card-tags">
+                            <span class="mock-card-tag">$$$</span>
+                            <span class="mock-card-tag">Date Night</span>
+                        </div>
+                        <div class="mock-card-footer">
+                            <span class="mock-card-location">Dundas</span>
+                            <a class="mock-card-link" href="#">lapalma.ca &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mock-card">
+                    <div class="mock-card-img" style="background-image:url('https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=200&fit=crop')">
+                        <span class="mock-card-badge tried">Tried</span>
+                    </div>
+                    <div class="mock-card-body">
+                        <div class="mock-card-name">Jacobs & Co</div>
+                        <div class="mock-card-cuisine">Steak</div>
+                        <div class="mock-card-tags">
+                            <span class="mock-card-tag">$$$$$</span>
+                            <span class="mock-card-tag">Celebration</span>
+                        </div>
+                        <div class="mock-card-footer">
+                            <span class="mock-card-location">Front Street</span>
+                            <a class="mock-card-link" href="#">jacobssteakhouse.com &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mock-footer">
+                <span class="mock-footer-brand">Dinner Out</span>
+                <span class="mock-footer-text">Ana & Brad's restaurant guide</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

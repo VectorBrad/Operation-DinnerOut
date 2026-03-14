@@ -1,16 +1,16 @@
 # 0005 — TorontoRestaurants — Project Brief
 
 ## What it does
-[Plain language description — suitable for sharing with anyone]
+Take details from a spreadsheet that outlines restaurants that Ana and Brad interested in visiting. Plot them on an html webstite map of the city and show details about them in. 
 
 ## Why we're building it
-[Problem being solved or opportunity being captured]
+Improve web design experience and create a fun way of transdforming the data of our restaurant / date night wishlist to share with one another.
 
 ## Who it's for
-[Users or audience]
+Personal use
 
 ## What success looks like
-[How we know it's done and working]
+Data looks pretty and is useful and fun.
 
 ## Known constraints
-[Budget, timeline, technical limits, dependencies]
+none at the time

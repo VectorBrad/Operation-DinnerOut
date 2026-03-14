@@ -1,17 +1,26 @@
-# 0005 � TorontoRestaurants
+# 0005 � TorontoRestaurants
 
 @PROJECT_BRIEF.md
 
 Created: 2026-03-13
 
 ## Stack
-[Leave blank to inherit global defaults, or specify overrides here]
+- Frontend: HTML + vanilla JS + CSS (static site, no build step)
+- Map: Leaflet.js + CARTO/OpenStreetMap tiles
+- Data pipeline: Python (openpyxl) → JSON, one-time geocoding via Nominatim
+- Hosting: GitHub Pages from `docs/` folder
 
 ## Key Files & Folders
-[Fill in as project grows]
+- `To Try.xlsx` — source data (restaurant list)
+- `scripts/build_data.py` — converts xlsx → `docs/data/restaurants.json` with geocoding
+- `docs/` — static site served by GitHub Pages (index.html, style.css, app.js)
+- `docs/data/restaurants.json` — generated restaurant data with lat/lng
 
 ## Data Sources & Credits
-[List all external data sources, APIs, libraries with notable attribution]
+- Map tiles: [CARTO](https://carto.com/) (light basemap) via OpenStreetMap
+- Map library: [Leaflet.js v1.9.4](https://leafletjs.com/)
+- Geocoding: [OpenStreetMap Nominatim](https://nominatim.openstreetmap.org/) (one-time, with manual overrides)
+- Fonts: [DM Sans / DM Serif Display](https://fonts.google.com/) via Google Fonts
 
 ## Project-Specific Rules
 [Any rules that override or extend the global CLAUDE.md for this project]
