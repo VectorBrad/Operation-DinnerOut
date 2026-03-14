@@ -19,7 +19,7 @@
     // Firebase config
     const firebaseConfig = {
         apiKey: "AIzaSyAhl6Lj3mZCkwyFmRJrRTBuNNsn-fhVhHA",
-        authDomain: "vectorbrad.github.io",
+        authDomain: "restaurants-90def.firebaseapp.com",
         projectId: "restaurants-90def",
         storageBucket: "restaurants-90def.firebasestorage.app",
         messagingSenderId: "502651951719",
