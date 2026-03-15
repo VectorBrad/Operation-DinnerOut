@@ -240,12 +240,12 @@
         document.getElementById("edit-status").value = r.status || "Want to try";
         document.getElementById("edit-notes").value = r.notes || "";
 
-        // Show existing image if any
+        // Show existing image or clear cropper
         pendingImageFile = null;
         if (r.image) {
-            showImagePreview(r.image);
+            showCropper(r.image);
         } else {
-            clearImagePreview();
+            clearCropper();
         }
 
         // Store reference to the restaurant object and card element for post-save update
@@ -268,6 +268,7 @@
         overlay.classList.remove("active");
         overlay.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "";
+        clearCropper();
     }
 
     // ── Open modal in "Add New" mode ──
@@ -285,9 +286,9 @@
         document.getElementById("edit-status").value = "Want to try";
         document.getElementById("edit-notes").value = "";
 
-        // Clear image upload
+        // Clear image cropper
         pendingImageFile = null;
-        clearImagePreview();
+        clearCropper();
 
         document.getElementById("edit-modal").dataset.restaurantIndex = "-1";
         document.querySelector(".modal-title").textContent = "Add Restaurant";
@@ -295,28 +296,54 @@
         showModal();
     }
 
-    // ── Image upload helpers ──
-    function showImagePreview(src) {
-        var preview = document.getElementById("image-upload-preview");
-        var text = document.getElementById("image-upload-text");
-        var removeBtn = document.getElementById("image-upload-remove");
-        preview.src = src;
-        preview.style.display = "";
-        text.style.display = "none";
-        removeBtn.style.display = "";
+    // ── Image upload + crop helpers ──
+    let cropper = null;
+
+    function showCropper(src) {
+        var uploadArea = document.getElementById("image-upload-area");
+        var cropContainer = document.getElementById("image-crop-container");
+        var cropImg = document.getElementById("image-crop-source");
+
+        uploadArea.style.display = "none";
+        cropContainer.style.display = "";
+        cropImg.src = src;
+
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(cropImg, {
+            aspectRatio: 16 / 10,
+            viewMode: 1,
+            dragMode: "move",
+            autoCropArea: 1,
+            cropBoxResizable: true,
+            cropBoxMovable: true,
+            background: false,
+            responsive: true,
+        });
     }
 
-    function clearImagePreview() {
-        var preview = document.getElementById("image-upload-preview");
-        var text = document.getElementById("image-upload-text");
-        var removeBtn = document.getElementById("image-upload-remove");
+    function clearCropper() {
+        var uploadArea = document.getElementById("image-upload-area");
+        var cropContainer = document.getElementById("image-crop-container");
         var input = document.getElementById("edit-image-upload");
-        preview.src = "";
-        preview.style.display = "none";
-        text.style.display = "";
-        removeBtn.style.display = "none";
+
+        if (cropper) { cropper.destroy(); cropper = null; }
+        cropContainer.style.display = "none";
+        uploadArea.style.display = "flex";
         input.value = "";
         pendingImageFile = null;
+    }
+
+    function getCroppedBlob() {
+        return new Promise(function (resolve) {
+            if (!cropper) { resolve(null); return; }
+            cropper.getCroppedCanvas({
+                maxWidth: 800,
+                maxHeight: 500,
+                imageSmoothingQuality: "high",
+            }).toBlob(function (blob) {
+                resolve(blob);
+            }, "image/jpeg", 0.85);
+        });
     }
 
     function handleImageFile(file) {
@@ -324,23 +351,22 @@
         pendingImageFile = file;
         var reader = new FileReader();
         reader.onload = function (e) {
-            showImagePreview(e.target.result);
+            showCropper(e.target.result);
         };
         reader.readAsDataURL(file);
     }
 
-    async function uploadImage(file, docId) {
+    async function uploadImage(blob, docId) {
         if (!storage) return null;
-        var ext = file.name.split(".").pop() || "jpg";
-        var ref = storage.ref("restaurant-images/" + docId + "." + ext);
-        var snapshot = await ref.put(file);
+        var ref = storage.ref("restaurant-images/" + docId + ".jpg");
+        var snapshot = await ref.put(blob, { contentType: "image/jpeg" });
         return snapshot.ref.getDownloadURL();
     }
 
     function initImageUpload() {
         var area = document.getElementById("image-upload-area");
         var input = document.getElementById("edit-image-upload");
-        var removeBtn = document.getElementById("image-upload-remove");
+        var removeBtn = document.getElementById("image-crop-remove");
 
         input.addEventListener("change", function () {
             if (this.files && this.files[0]) handleImageFile(this.files[0]);
@@ -363,8 +389,7 @@
 
         removeBtn.addEventListener("click", function (e) {
             e.preventDefault();
-            e.stopPropagation();
-            clearImagePreview();
+            clearCropper();
         });
     }
 
@@ -425,13 +450,16 @@
             const finalDocId = isNew ? makeDocId(changes.name) : docId;
 
             try {
-                // Upload image if one was selected
-                if (pendingImageFile) {
+                // Upload cropped image if one was selected
+                if (pendingImageFile && cropper) {
                     saveBtn.textContent = "Uploading image…";
-                    var imageUrl = await uploadImage(pendingImageFile, finalDocId);
-                    if (imageUrl) {
-                        changes.image = imageUrl;
-                        changes.image_type = "upload";
+                    var croppedBlob = await getCroppedBlob();
+                    if (croppedBlob) {
+                        var imageUrl = await uploadImage(croppedBlob, finalDocId);
+                        if (imageUrl) {
+                            changes.image = imageUrl;
+                            changes.image_type = "upload";
+                        }
                     }
                     pendingImageFile = null;
                 }

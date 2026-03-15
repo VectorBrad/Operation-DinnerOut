@@ -15,6 +15,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -210,10 +213,14 @@
                 <div class="modal-field">
                     <label for="edit-image-upload">Photo</label>
                     <div class="image-upload-area" id="image-upload-area">
-                        <img id="image-upload-preview" class="image-upload-preview" style="display:none" alt="Preview">
                         <span id="image-upload-text" class="image-upload-text">Click or drag to upload a photo</span>
                         <input type="file" id="edit-image-upload" accept="image/*" class="image-upload-input">
-                        <button type="button" id="image-upload-remove" class="image-upload-remove" style="display:none">&times;</button>
+                    </div>
+                    <div class="image-crop-container" id="image-crop-container" style="display:none">
+                        <img id="image-crop-source" alt="Crop">
+                        <div class="image-crop-actions">
+                            <button type="button" class="modal-btn modal-btn-cancel" id="image-crop-remove">Remove</button>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-field">
@@ -259,6 +266,9 @@
     <script src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.4.0/firebase-storage-compat.js"></script>
+
+    <!-- Cropper.js -->
+    <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
 
     <script src="app.js"></script>
 </body>
