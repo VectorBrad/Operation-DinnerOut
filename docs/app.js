@@ -244,7 +244,8 @@
         // Show existing image or clear cropper
         pendingImageFile = null;
         if (r.image) {
-            showCropper(r.image);
+            var isCroppable = r.image_type === "upload" || r.image.includes("firebasestorage");
+            showCropper(r.image, isCroppable);
         } else {
             clearCropper();
         }
@@ -310,10 +311,15 @@
 
         if (cropper) { cropper.destroy(); cropper = null; }
 
-        // For local files (data URLs), show full cropper
-        // For remote URLs, show preview only (CORS blocks canvas export)
+        // Croppable: local files (data URLs) and Firebase Storage URLs (CORS-safe)
+        // Preview-only: other remote URLs (CORS blocks canvas export)
         if (isLocalFile) {
-            cropImg.crossOrigin = null;
+            var isDataUrl = src.startsWith("data:");
+            if (isDataUrl) {
+                cropImg.removeAttribute("crossOrigin");
+            } else {
+                cropImg.crossOrigin = "anonymous";
+            }
             cropImg.src = src;
             hasImageInCropper = true;
             cropper = new Cropper(cropImg, {
@@ -325,10 +331,10 @@
                 cropBoxMovable: true,
                 background: false,
                 responsive: true,
+                checkCrossOrigin: !isDataUrl,
             });
         } else {
             // Preview-only mode for existing remote images
-            // Don't set crossOrigin — many servers don't send CORS headers
             cropImg.removeAttribute("crossOrigin");
             cropImg.src = src;
             hasImageInCropper = false;
