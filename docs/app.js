@@ -11,10 +11,7 @@
     let db;
     let currentUser = null;
 
-    const ALLOWED_EMAILS = [
-        "payne.brad@gmail.com",
-        "anahitamakouie@gmail.com"
-    ];
+    // Allowed users enforced by Firestore security rules — no email list in client code
 
     // Firebase config
     const firebaseConfig = {
@@ -492,15 +489,13 @@
         });
 
         auth.onAuthStateChanged(function (user) {
-            if (user && ALLOWED_EMAILS.indexOf(user.email) !== -1) {
+            if (user) {
                 currentUser = user;
                 signInBtn.style.display = "none";
                 signOutBtn.style.display = "";
                 addItem.style.display = "";
-                // Show edit icons
                 document.body.classList.add("auth-ready");
             } else {
-                if (user) auth.signOut(); // signed in but not allowed
                 currentUser = null;
                 signInBtn.style.display = "";
                 signOutBtn.style.display = "none";
