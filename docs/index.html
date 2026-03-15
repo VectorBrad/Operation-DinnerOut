@@ -143,12 +143,34 @@
                 <input type="hidden" id="edit-doc-id">
                 <div class="modal-field-group">
                     <div class="modal-field">
-                        <label for="edit-name">Name</label>
-                        <input type="text" id="edit-name" name="name">
+                        <label for="edit-name">Name *</label>
+                        <input type="text" id="edit-name" name="name" required>
                     </div>
                     <div class="modal-field">
-                        <label for="edit-cuisine">Cuisine</label>
-                        <input type="text" id="edit-cuisine" name="cuisine">
+                        <label for="edit-cuisine">Cuisine *</label>
+                        <select id="edit-cuisine" name="cuisine" required>
+                            <option value="">Select…</option>
+                            <option value="Caribbean">Caribbean</option>
+                            <option value="Chinese">Chinese</option>
+                            <option value="Ethiopian">Ethiopian</option>
+                            <option value="French">French</option>
+                            <option value="Greek">Greek</option>
+                            <option value="Indian">Indian</option>
+                            <option value="Italian">Italian</option>
+                            <option value="Japanese">Japanese</option>
+                            <option value="Korean">Korean</option>
+                            <option value="Lebanese">Lebanese</option>
+                            <option value="Mexican">Mexican</option>
+                            <option value="Persian">Persian</option>
+                            <option value="Portuguese">Portuguese</option>
+                            <option value="Seafood">Seafood</option>
+                            <option value="Steak">Steak</option>
+                            <option value="Thai">Thai</option>
+                            <option value="Turkish">Turkish</option>
+                            <option value="Vietnamese">Vietnamese</option>
+                            <option value="Brunch">Brunch</option>
+                            <option value="Pizza">Pizza</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-field-group">
@@ -186,8 +208,8 @@
                     </div>
                 </div>
                 <div class="modal-field">
-                    <label for="edit-status">Status</label>
-                    <select id="edit-status" name="status">
+                    <label for="edit-status">Status *</label>
+                    <select id="edit-status" name="status" required>
                         <option value="Want to try">Want to Try</option>
                         <option value="Tried">Tried</option>
                     </select>
