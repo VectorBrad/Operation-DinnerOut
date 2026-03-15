@@ -376,6 +376,7 @@
     function handleImageFile(file) {
         if (!file || !file.type.startsWith("image/")) return;
         pendingImageFile = file;
+        imageRemoved = false;
         var reader = new FileReader();
         reader.onload = function (e) {
             showCropper(e.target.result, true);
